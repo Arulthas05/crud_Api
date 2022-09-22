@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <title>Crude</title>
+    <style>
+      fieldset {
+        width: 20%;
+        border: 2px solid black;
+        border-radius: 20px;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      table {
+        width: 90%;
+        margin: 3% 5% 0% 5%;
+      }
+
+      fieldset {
+        margin: auto;
+      }
+
+      .A {
+        margin-left: 10px;
+        padding: 10px;
+      }
+
+      input {
+        padding: 5px;
+        width: 90%;
+      }
+
+      label {
+        font-size: 20px;
+      }
+
+      button {
+        margin: 0px 1px 0px 1px;
+        padding: 5px;
+        width: 83.5%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container mt-5">
+      <div class="text-center">
+        <h1 class="display-5 mb-5"><strong>Bio students marks</strong></h1>
+      </div>
+    </div>
+
+    <form id="form" method="post">
+      <fieldset>
+        <div class="A">
+          <label for="StudentId">Student Id</label><br />
+          <input type="text" id="StudentId" /><br /><br />
+          <label for="StudentName">Student Name</label><br />
+          <input type="text" id="StudentName" /><br /><br />
+          <label for="ChemistryMarks">Chemistry Marks</label><br />
+          <input type="text" id="ChemistryMarks" /><br /><br />
+          <label for="PhysicsMarks">Physics Marks</label><br />
+          <input type="text" id="PhysicsMarks" /><br /><br />
+          <label for="BiologyMarks">Biology Marks</label><br />
+          <input type="text" id="BiologyMarks" /><br /><br />
+          <div>
+            <button id="submit">Submit</button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Student Id</th>
+          <th>Student Name</th>
+          <th>Chemistry Marks</th>
+          <th>Physics Marks</th>
+          <th>Biology Marks</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="student">
+        <tr>
+          <td>12</td>
+          <td>Aru[</td>
+          <td>23</td>
+          <td>23</td>
+          <td>25</td>
+          <td>
+            <a href="#" class="btn btn-warning btn-sm edit">Edit</a>
+            <a href="#" class="btn btn-danger btn-sm delete">Delete</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <script>
+      var selectedRow = null;
+
+      function showAlert(message, className) {
+        const div = document.createElement("div");
+        div.className = "alert alert-${className}";
+
+        div.appendChild(document.createTextNode(message));
+        const container = document.querySelector(".container");
+        const main = document.querySelector(".main");
+        container.insertBefore(div, main);
+
+        setTimeout(() => document.querySelector(".alert").remove(), 3000);
+      }
+
+      function clearFields() {
+        document.querySelector("#StudentId").value = "";
+        document.querySelector("#StudentName").value = "";
+        document.querySelector("#ChemistryMarks").value = "";
+        document.querySelector("#PhysicsMarks").value = "";
+        document.querySelector("#BiologyMarks").value = "";
+      }
+
+      document.querySelector("#form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const StudentId = document.querySelector("#StudentId").value;
+        const StudentName = document.querySelector("#StudentName").value;
+        const ChemistryMarks = document.querySelector("#ChemistryMarks").value;
+        const PhysicsMarks = document.querySelector("#PhysicsMarks").value;
+        const BiologyMarks = document.querySelector("#BiologyMarks").value;
+
+        if (
+          StudentId == "" ||
+          StudentName == "" ||
+          ChemistryMarks == "" ||
+          PhysicsMarks == "" ||
+          BiologyMarks == ""
+        ) {
+          showAlert("Please fill in all fields");
+        } else {
+          if (selectedRow == null) {
+            const list = document.querySelector("#student");
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${StudentId}</td>
+                <td>${StudentName}</td>
+                <td>${ChemistryMarks}</td>
+                <td>${PhysicsMarks}</td>
+                <td>${BiologyMarks}</td>
+                <td>
+                <a href="#" class="btn btn-warning btn-sm edit">Edit</a>
+                <a href="#" class="btn btn-danger btn-sm delete">Delete</a>
+                `;
+            list.appendChild(row);
+            selectedRow = null;
+            showAlert("Student Added", "success");
+          } else {
+            selectedRow.children[0].textContent = StudentId;
+            selectedRow.children[1].textContent = StudentName;
+            selectedRow.children[2].textContent = ChemistryMarks;
+            selectedRow.children[3].textContent = PhysicsMarks;
+            selectedRow.children[4].textContent = BiologyMarks;
+            selectedRow = null;
+            showAlert("Student Info Edited", "info");
+          }
+          // clearfields();
+        }
+      });
+
+      document.querySelector("#student").addEventListener("click", (e) => {
+        target = e.target;
+        if (target.classList.contains("edit")) {
+          selectedRow = target.parentElement.parentElement;
+          document.querySelector("#StudentId").value =
+            selectedRow.children[0].textContent;
+          document.querySelector("#StudentName").value =
+            selectedRow.children[1].textContent;
+          document.querySelector("#ChemistryMarks").value =
+            selectedRow.children[2].textContent;
+          document.querySelector("#PhysicsMarks").value =
+            selectedRow.children[3].textContent;
+          document.querySelector("#BiologyMarks").value =
+            selectedRow.children[4].textContent;
+        }
+      });
+
+      document.querySelector("#student").addEventListener("click", (e) => {
+        e.target;
+        if (target.classList.contains("delete")) {
+          target.parentElement.parentElement.remove();
+          showAlert("#Student Data Deleted", "danger");
+        }
+      });
+
+      //backend connect
+
+      var form = document.getElementById("form");
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        var StudentId = document.getElementById("StudentId").value;
+        var StudentName = document.getElementById("StudentName").value;
+        var ChemistryMarks = document.getElementById("ChemistryMarks").value;
+        var PhysicsMarks = document.getElementById("PhysicsMarks").value;
+        var BiologyMarks = document.getElementById("BiologyMarks").value;
+
+        
+
+
+        //grt
+        // fetch('http://localhost:3004/fetch/2')
+        //     .then(res => {
+        //         if (res.ok) { console.log("HTTP request successful") }
+        //         else { console.log("HTTP request unsuccessful") }
+        //         return res
+        //     })
+
+        //     .then(function (response) {
+        //         return response.json()
+        //     })
+        //         .then(function (data) {
+        //             let tableData = "";
+
+        //             data.map((values) => {
+        //                 tableData += `<tr>
+        //         <td>${values.StudentId}</td>
+        //         <td>${values.StudentName}</td>
+        //         <td>${values.ChemistryMarks}</td>
+        //         <td>${values.PhysicsMarks}</td>
+        //         <td>${values.BiologyMarks}</td>
+
+        //         <td>
+
+        //         <a href="#" class="btn btn-warning btn-sm edit">Edit</a>
+        //         <a href="#" class="btn btn-danger btn-sm delete">Delete</a>
+        //         </td>
+        //         36
+
+        //         3.   </tr>`;
+
+        //         })
+        //             document.getElementById("student").innerHTML = tableData;
+        //         })
+        //     .catch(function (error) {
+        //         console.log(error)
+        //     })
+        
+
+            // const promise = fetch("http://localhost:3004/fulldata")
+
+            //     .then(function (res) {
+            //         if (res.status === 200)
+            //             return res.json();
+            //         else throw new Error("Something Failed..");
+
+            //     }).then(function (data) {
+            //         let tableData = "";
+
+            //         data.map((values) => {
+            //             tableData += `<tr>
+            //     <td>${values.StudentId}</td>
+            //     <td>${values.StudentName}</td>
+            //     <td>${values.ChemistryMarks}</td>
+            //     <td>${values.PhysicsMarks}</td>
+            //     <td>${values.BiologyMarks}</td>
+
+            //     <td>
+
+            //     <a href="#" class="btn btn-warning btn-sm edit">Edit</a>
+            //     <a href="#" class="btn btn-danger btn-sm delete">Delete</a>
+            //     </td>
+            //     36
+
+            //     3.   </tr>`;
+            //     });
+            //         document.getElementById("student").innerHTML = tableData;
+            //     })
+            //     .catch(function (err) {
+            //         console.log(err.message);
+            //     })
+        
+
+        //post
+
+        // fetch("http://localhost:3004/post", {
+        //     method: "post",
+        //     body: JSON.stringify({
+        //         StudentId: StudentId,
+        //         StudentName: StudentName,
+        //         ChemistryMarks: ChemistryMarks,
+        //         PhysicsMarks: PhysicsMarks,
+        //         BiologyMarks: BiologyMarks
+
+        //     }),
+        //     headers: {
+        //         "Content-Type": "application/json; charset=UTF-8"
+        //     }
+
+        // })
+
+        //     .then(function (response) {
+        //         return response.json()
+        //     })
+        //     .then(function (data) {
+        //         console.log(data)
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error)
+        //     })
+
+        //update
+
+        fetch("http://localhost:3004/update/34", {
+            method: "put",
+            body: JSON.stringify({
+                StudentId: StudentId,
+                StudentName: StudentName,
+                ChemistryMarks: ChemistryMarks,
+                PhysicsMarks: PhysicsMarks,
+                BiologyMarks: BiologyMarks
+
+            }),
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8"
+            }
+
+        })
+
+            .then(function (response) {
+                return response.json()
+            })
+            .then(function (data) {
+                console.log(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+
+        //delete
+
+        // fetch("http://localhost:3004/del/1", {
+        //     method: "delete",
+
+        //     headers: {
+        //         "Content-Type": "application/json; charset=UTF-8"
+        //     }
+        // })
+        //     .then(res => {
+        //         if (res.ok) { console.log("HTTP request successful") }
+        //         else { console.log("HTTP request unsuccessful") }
+        //         return res
+        //     })
+
+        //     .then(function (response) {
+        //         return response.json()
+        //     })
+        //     .then(function (data) {
+        //         console.log(data)
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error)
+        //     })
+      })
+
+         
+    </script>
+  </body>
+</html>
